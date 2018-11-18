@@ -12,6 +12,8 @@ import {
   MatListModule,
   MatTabsModule,
   MatCardModule,
+  MatSelectModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 @NgModule({
@@ -27,7 +29,9 @@ import {
     MatToolbarModule,
     MatListModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatButtonModule,
@@ -41,8 +45,9 @@ import {
     MatSidenavModule,
     MatListModule,
     MatTabsModule,
-    MatCardModule
-
+    MatCardModule,
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   providers: []
 })
