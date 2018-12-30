@@ -3,6 +3,10 @@ import {Exercise} from './exercise.model';
 import {Subject} from 'rxjs/Subject';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {Subscription} from 'rxjs/Subscription';
+import {UiService} from '../shared/ui.service';
+import * as UI from '../shared/ui.actions';
+import * as fromRoot from '../app.reducer';
+import {Store} from '@ngrx/store';
 
 @Injectable()
 export class TrainingService {
@@ -22,10 +26,11 @@ export class TrainingService {
   private fbSubs: Subscription[] = [];
   finishedExercises: Exercise[] = [];
 
-  constructor(public db: AngularFirestore) {
+  constructor(public db: AngularFirestore, public uiService: UiService, private store: Store<fromRoot.State>) {
   }
 
   getAvailableExercises() {
+    this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
       .collection('availableExercises')
       .snapshotChanges()
@@ -40,10 +45,15 @@ export class TrainingService {
         });
       })
       .subscribe((exercises: Exercise[]) => {
-        console.log(exercises);
-        this.availableExercises = exercises;
-        this.exercisesChanged.next([...this.availableExercises]);
-      }));
+          this.store.dispatch(new UI.StopLoading());
+          this.availableExercises = exercises;
+          this.exercisesChanged.next([...this.availableExercises]);
+        },
+        err => {
+          this.exercisesChanged.next(null);
+          this.store.dispatch(new UI.StopLoading());
+          this.uiService.showSnackbar('Fetching exercises failed, please try again later', null, 3000);
+        }));
   }
 
   startExercise(selectedId: string) {
@@ -82,10 +92,14 @@ export class TrainingService {
   }
 
   fetchCompletedExercises() {
+    this.uiService.loginStateChanged.next(true);
     this.fbSubs.push(
       this.db.collection('finishedExercises').valueChanges()
         .subscribe((exercises: Exercise[]) => {
+          this.uiService.loginStateChanged.next(false);
           this.finishedExercisesChanged.next(exercises);
+        }, err => {
+          this.uiService.showSnackbar('Fetching Exercises Failed, lease try again later', null, 3000);
         }));
   }
 
