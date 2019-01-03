@@ -2,6 +2,8 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from '../../auth/auth.service';
 import {Store} from '@ngrx/store';
 import * as fromRoot from '../../app.reducer';
+import * as Sidenav from '../../shared/sidenav.actions';
+
 import {Observable} from 'rxjs/Observable';
 
 @Component({
@@ -21,7 +23,8 @@ export class SidenavListComponent implements OnInit {
   }
 
   onClose() {
-    this.sidenavClose.emit();
+    this.store.dispatch(new Sidenav.CloseSidenav());
+    // this.sidenavClose.emit();
   }
 
   onLogout() {

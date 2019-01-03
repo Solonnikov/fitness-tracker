@@ -3,6 +3,7 @@ import {Store} from '@ngrx/store';
 import * as fromRoot from '../../app.reducer';
 import {Observable} from 'rxjs/Observable';
 import {AuthService} from '../../auth/auth.service';
+import * as Sidenav from '../../shared/sidenav.actions';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,8 @@ export class HeaderComponent implements OnInit {
   }
 
   ontoggleSidenav() {
-    this.sidenavToggle.emit();
+    this.store.dispatch(new Sidenav.ToggleSidenav());
+    // this.sidenavToggle.emit();
   }
 
   onLogout() {

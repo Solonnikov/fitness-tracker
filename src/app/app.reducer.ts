@@ -1,16 +1,20 @@
 import * as fromUi from './shared/ui.reducer';
 import * as fromAuth from './auth/auth.reducer';
+import * as fromSidenav from './shared/sidenav.reducer';
+
 
 import {ActionReducerMap, createFeatureSelector, createSelector} from '@ngrx/store';
 
 export interface State {
   ui: fromUi.State;
   auth: fromAuth.State;
+  sidenav: fromSidenav.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
   ui: fromUi.uiReducer,
-  auth: fromAuth.authReducer
+  auth: fromAuth.authReducer,
+  sidenav: fromSidenav.sidenavReducer
 };
 
 export const getUiState = createFeatureSelector<fromUi.State>('ui');
@@ -18,3 +22,6 @@ export const getIsLoading = createSelector(getUiState, fromUi.getIsLoading);
 
 export const getAuthState = createFeatureSelector<fromAuth.State>('auth');
 export const getIsAuth = createSelector(getAuthState, fromAuth.getIsAuth);
+
+export const getSidenavState = createFeatureSelector<fromSidenav.State>('sidenav');
+export const getIsSidenav = createSelector(getSidenavState, fromSidenav.getIsSidenav);
